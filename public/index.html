@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Short URL Service</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 400px;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    input {
+      width: 70%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 15px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔗 Shorten Your URL</h1>
+    <input type="text" id="longUrl" placeholder="Enter your long URL here...">
+    <button onclick="shortenUrl()">Shorten</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    async function shortenUrl() {
+      const longUrl = document.getElementById("longUrl").value;
+      if (!longUrl) {
+        alert("Please enter a URL!");
+        return;
+      }
+
+      try {
+        const response = await fetch("/url", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ url: longUrl }),
+        });
+
+        const data = await response.json();
+        if (data.shortId) {
+          document.getElementById("result").innerHTML = `
+            ✅ Short URL: <a href="/${data.shortId}" target="_blank">
+              http://localhost:8001/${data.shortId}
+            </a>
+          `;
+        } else {
+          document.getElementById("result").innerText = "❌ Failed to shorten URL!";
+        }
+      } catch (error) {
+        console.error(error);
+        document.getElementById("result").innerText = "⚠️ Error connecting to server!";
+      }
+    }
+  </script>
+</body>
+</html>

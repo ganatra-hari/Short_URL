@@ -82,9 +82,10 @@
 
         const data = await response.json();
         if (data.shortId) {
+          const baseUrl = window.location.origin; // dynamically gets Render or local
           document.getElementById("result").innerHTML = `
-            ✅ Short URL: <a href="/${data.shortId}" target="_blank">
-              http://localhost:8001/${data.shortId}
+          ✅ Short URL: <a href="${baseUrl}/${data.shortId}" target="_blank">
+          ${baseUrl}/${data.shortId}
             </a>
           `;
         } else {
